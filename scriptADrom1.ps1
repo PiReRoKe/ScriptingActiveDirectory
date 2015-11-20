@@ -1,6 +1,7 @@
 $fichier="C:\users.txt"
 $logfile="C:\logfile.log"
 
+#Creation user basic
 function create_users {
     param([string[]]$params)
     $local=[ADSI]"WinNT://."
@@ -39,5 +40,24 @@ function lire_fichier {
     }
 }
 
+#Creation d'une OU
+function create_ou {
+    param([string]$name)
+    Import-Module ActiveDirectory
+    New-ADOrganizationalUnit -Name $nom -Path "OU=stages,DC=newyork.domain,DC=LOC"
+}
+
+#Creation utilisateur sur AD [a tester]
+function adduser {
+    param([string[]]$params)
+    $nom=$params[0]
+    $prenom=$params[1]
+    $description=$params[2]
+    $ou=$params[3]
+    New-ADUser -name $prenom" "$nom -ChangePasswordAtLogon 1 -Path "OU=stage,OU=$ou,DC=newyork.domain,DC=LOC" -Description $description -DisplayName $prenom" "$nom -Enabled $true -GivenName $prenom -SamAccountName $prenom"."$nom -AccountPassword (ConvertTo-SecureString "P@ssword" -AsPlainText -force)
+    Add-ADGroupMember -Identity "$ou" -Member $prenom"."$nom
+}
+
 # Exécution
-lire_fichier($fichier)
+#lire_fichier($fichier)
+create_ou("test")
