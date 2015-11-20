@@ -49,6 +49,7 @@ function create_ou {
 
 #Creation utilisateur sur AD [a tester]
 function adduser {
+    Import-Module ActiveDirectory
     param([string[]]$params)
     $nom=$params[0]
     $prenom=$params[1]
