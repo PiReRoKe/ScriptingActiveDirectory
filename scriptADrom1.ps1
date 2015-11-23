@@ -42,23 +42,24 @@ function lire_fichier {
 
 #Creation d'une OU
 function create_ou {
-    param([string]$name)
+    param([string]$nom)
     Import-Module ActiveDirectory
-    New-ADOrganizationalUnit -Name $nom -Path "OU=stages,DC=newyork.domain,DC=LOC"
+    New-ADOrganizationalUnit -Name $nom -Path "ou=stages,dc=newyork,dc=domain"
 }
 
-#Creation utilisateur sur AD [a tester]
+#Creation utilisateur sur AD
 function adduser {
-    Import-Module ActiveDirectory
     param([string[]]$params)
+    Import-Module ActiveDirectory
     $nom=$params[0]
     $prenom=$params[1]
     $description=$params[2]
     $ou=$params[3]
-    New-ADUser -name $prenom" "$nom -ChangePasswordAtLogon 1 -Path "OU=stage,OU=$ou,DC=newyork.domain,DC=LOC" -Description $description -DisplayName $prenom" "$nom -Enabled $true -GivenName $prenom -SamAccountName $prenom"."$nom -AccountPassword (ConvertTo-SecureString "P@ssword" -AsPlainText -force)
-    Add-ADGroupMember -Identity "$ou" -Member $prenom"."$nom
+    New-ADUser -name $prenom" "$nom -ChangePasswordAtLogon 1 -Path "ou=$ou,ou=stages,dc=newyork,dc=domain" -Description $description -DisplayName $prenom" "$nom -Enabled $true -GivenName $prenom -SamAccountName $prenom"."$nom -AccountPassword (ConvertTo-SecureString "P@ssword" -AsPlainText -force)
+    #Add-ADGroupMember -Identity "$ou" -Member $prenom"."$nom
 }
 
-# ExÃ©cution
+# Exécution
 #lire_fichier($fichier)
-create_ou("test")
+#create_ou("test1")
+adduser(@("besland","romain","desc","test1"))
