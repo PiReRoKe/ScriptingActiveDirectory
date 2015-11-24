@@ -17,6 +17,16 @@ function adduser {
     $prenom=$params[1]
     $description=$params[2]
     $ou=$params[3]
+    
+    If ([ADSI]::Exists("LDAP://OU=$ou,OU=stages,DC=newyork,DC=domain"))
+    {
+        Write "[$date] OU $ou already exist" >> $logfile
+    }
+    else {
+        create_ou($ou)
+        Write "[$date] OU $ou added successfully" >> $logfile
+    }
+    
     If (dsquery user -samid "$prenom.$nom")
     {
         Write "[$date] User $nom already exist" >> $logfile
@@ -28,17 +38,22 @@ function adduser {
     #Add-ADGroupMember -Identity "$ou" -Member $prenom"."$nom
 }
 
-# Ex�cution
-$nom=Read-Host -Prompt "Utilisateur - Nom :"
-$prenom=Read-Host -Prompt "Utilisateur - Prénom"
-$description=Read-Host -Prompt "Utilisateur - Description"
-$ou=Read-Host -Prompt "Dans quelle unité d'organisation doit figurer l'utilisateur ?"
-If ([ADSI]::Exists("LDAP://OU=$ou,OU=stages,DC=newyork,DC=domain"))
-{
-    Write "[$date] OU $ou already exist" >> $logfile
+function lire_fichier {
+    param([string]$file_path)
+    If (Test-Path $file_path)
+    {
+        $colLignes=Get-Content $file_path
+
+        Foreach ($ligne in $colLignes)
+        {
+            $tabCompte=$ligne.Split("/")
+            adduser($tabCompte)
+        }
+    }
+    else {
+        Write "File $file_path does not exist" >> $logfile
+    }
 }
-else {
-    create_ou($ou)
-    Write "[$date] OU $ou added successfully" >> $logfile
-}
-adduser(@($nom,$prenom,$description,$ou))
+
+#Execute
+lire_fichier($fichier)
