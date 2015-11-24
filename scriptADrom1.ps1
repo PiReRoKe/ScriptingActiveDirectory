@@ -17,7 +17,7 @@ function adduser {
     $prenom=$params[1]
     $description=$params[2]
     $ou=$params[3]
-    
+
     If ([ADSI]::Exists("LDAP://OU=$ou,OU=stages,DC=newyork,DC=domain"))
     {
         Write "[$date] OU $ou already exist" >> $logfile
@@ -26,7 +26,7 @@ function adduser {
         create_ou($ou)
         Write "[$date] OU $ou added successfully" >> $logfile
     }
-    
+
     If (dsquery user -samid "$prenom.$nom")
     {
         Write "[$date] User $nom already exist" >> $logfile
