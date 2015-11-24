@@ -172,5 +172,5 @@ function lire_fichier {
 lire_fichier($fichier)
 
 #Reinitialise le fichier utilisateur
-#del $fichier
-#new-item $fichier -type file
+del $fichier
+new-item $fichier -type file
