@@ -1,4 +1,4 @@
-# Scripting Active Directory [Windows Serveur 2008 R2]
+# Scripting Active Directory [Windows Serveur 2008 R2 et plus récent]
 
 Put **boot.bat** on **C:\Windows\SYSVOL\sysvol\newyork.domain\SCRIPTS**
 
