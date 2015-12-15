@@ -73,6 +73,7 @@ function create_ou {
 }
 
 #Creation utilisateur sur AD
+#
 function adduser {
     param([string[]]$params)
     Import-Module ActiveDirectory
@@ -90,8 +91,8 @@ function adduser {
     else {
         New-ADUser -name $prenom" "$nom -ChangePasswordAtLogon 1 -Path "ou=$ou,ou=stages,dc=newyork,dc=domain" -Description $description -DisplayName $prenom" "$nom -Enabled $true -GivenName $prenom -SamAccountName $prenom"."$nom -AccountPassword (ConvertTo-SecureString "P@ssword" -AsPlainText -force) -ScriptPath "boot.bat"
         Write "[$date] Add user $prenom.$nom : success" >> $logfile
+        Add-ADGroupMember -Identity "stagiaires" -Member $prenom"."$nom
     }
-    Add-ADGroupMember -Identity "stagiaires" -Member $prenom"."$nom
     Write "[$date] Added $prenom.$nom to group stagiaires" >> $logfile
 }
 
